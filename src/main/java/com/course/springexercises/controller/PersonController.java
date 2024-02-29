@@ -10,7 +10,9 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -25,12 +27,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("persons")
 public class PersonController {
 
-    Map<String, PersonRest> persons;
+    List<PersonRest> persons;
 
-    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> getPerson(@PathVariable String id) {
-        if (persons.containsKey(id)) {
-            PersonRest person = persons.get(id);
+    @GetMapping(path = "/{dni}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getPerson(@PathVariable String dni) {
+        Optional<PersonRest> result = persons.stream()
+                .filter(per -> dni.equals(per.getDni()))
+                .findFirst();
+
+        if (result.isPresent()) {
+            PersonRest person = result.get();
             return new ResponseEntity<>(person.toString(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -40,18 +46,16 @@ public class PersonController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PersonRest> createPerson(@Valid @RequestBody PersonDataRequestModel personData) {
         PersonRest returnValue = new PersonRest();
+        returnValue.setDni(personData.getDni());
         returnValue.setName(personData.getName());
         returnValue.setSurname(personData.getSurname());
         returnValue.setSecondSurname(personData.getSecondSurname());
         returnValue.setDob(personData.getDob());
         returnValue.setSex(personData.getSex());
 
-        String id = UUID.randomUUID().toString();
-        returnValue.setId(id);
-
         if (persons == null)
             persons = new HashMap<>();
-        persons.put(id, returnValue);
+        persons.put(dni, returnValue);
 
         return new ResponseEntity<PersonRest>(returnValue, HttpStatus.OK);
     }

@@ -9,6 +9,10 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class PersonDataRequestModel {
+    @NotNull(message = "DNI cannot be null")
+    @Pattern(regexp = "/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i;")
+    private String dni;
+
     @NotNull(message = "First name cannot be null")
     @Size(min = 2, message = "First name must be at least 2 characters long")
     private String name;
