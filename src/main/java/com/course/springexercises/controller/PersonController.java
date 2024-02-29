@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -27,23 +26,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class PersonController {
 
     Map<String, PersonRest> persons;
-
-    public static class PersonDisplay {
-        private String name;
-        private String surname;
-        private String secondSurname;
-        private LocalDate dob;
-        private String sex;
-        private String fullName = name + " " + surname + (secondSurname == null ? "" : " " + secondSurname);
-
-        public PersonDisplay(String name, String surname, String secondSurname, LocalDate dob, String sex) {
-            this.name = name;
-            this.surname = surname;
-            this.secondSurname = secondSurname;
-            this.dob = dob;
-            this.sex = sex;
-        }
-    }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getPerson(@PathVariable String id) {
