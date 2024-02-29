@@ -73,15 +73,20 @@ public class PersonRest {
         return String.format("%s %s", name, surname) + (secondSurname == null ? "" : " " + secondSurname);
     }
 
-    public String print() {
+    @Override
+    public String toString() {
+        String second = secondSurname == null ? "null" : "\"" + secondSurname + "\""; // Avoid quotes on `null` value
+        String fullName = this.buildFullName();
         return String.format("""
-                Nombre: %s\n
-                Primer apellido: %s\n
-                Segundo apellido: %s\n
-                    Nombre completo: %s\n
-                    Fecha de nacimiento: %s\n
-                    Sexo: %s\n
-                    """, this.name, this.surname, this.secondSurname, this.buildFullName(), this.dob, this.sex);
+                {
+                    "name": "%s",
+                    "surname": "%s",
+                    "secondSurname": %s,
+                    "fullName": "%s"
+                    "dob": "%s",
+                    "sex": "%s"
+                }
+                """,
+                name, surname, second, fullName, dob, sex);
     }
-
 }

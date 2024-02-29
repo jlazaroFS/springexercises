@@ -46,14 +46,10 @@ public class PersonController {
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PersonDisplay> getPerson(@PathVariable String id) {
+    public ResponseEntity<String> getPerson(@PathVariable String id) {
         if (persons.containsKey(id)) {
-            PersonRest fullPerson = persons.get(id);
-            PersonDisplay dispPerson = new PersonDisplay(fullPerson.getName(), fullPerson.getSurname(),
-                    fullPerson.getSecondSurname(), fullPerson.getDob(), fullPerson.getSex());
-            System.out.println(String.format("%s %s %s %s %s", fullPerson.getName(), fullPerson.getSurname(),
-                    fullPerson.getSecondSurname(), fullPerson.getDob(), fullPerson.getSex()));
-            return new ResponseEntity<>(dispPerson, HttpStatus.OK);
+            PersonRest person = persons.get(id);
+            return new ResponseEntity<>(person.toString(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
