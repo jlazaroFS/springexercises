@@ -19,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("persons")
@@ -37,8 +36,9 @@ public class PersonController {
         }
     }
 
+    // Simply remove the @RequestBody annotation
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PersonRest> createPerson(@Valid @RequestBody PersonDataRequestModel personData) {
+    public ResponseEntity<PersonRest> createPerson(@Valid PersonDataRequestModel personData) {
         PersonRest returnValue = new PersonRest();
         returnValue.setName(personData.getName());
         returnValue.setSurname(personData.getSurname());
