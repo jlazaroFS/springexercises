@@ -29,6 +29,14 @@ public class PersonDataRequestModel {
     @Pattern(regexp = "^[MFX]$", message = "Use 'M' for male, 'F' for female or 'X' for other")
     private String sex;
 
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
     public String getName() {
         return name;
     }
