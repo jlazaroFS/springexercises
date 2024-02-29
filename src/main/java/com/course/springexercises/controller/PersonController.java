@@ -18,8 +18,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("persons")
@@ -54,27 +54,24 @@ public class PersonController {
         }
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PersonRest> createPerson(@Valid @RequestBody PersonDataRequestModel personData) {
-        PersonRest returnValue = new PersonRest();
-        returnValue.setDni(personData.getDni());
-        returnValue.setName(personData.getName());
-        returnValue.setSurname(personData.getSurname());
-        returnValue.setSecondSurname(personData.getSecondSurname());
-        returnValue.setDob(personData.getDob());
-        returnValue.setSex(personData.getSex());
-
-        // To make the method update the data instead of just adding a new person,
-        // first we check if the DNI of the person already exists in our list.
+    @PutMapping(path = "/{dni}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PersonRest> updatePerson(@PathVariable String dni,
+            @Valid @RequestBody PersonDataRequestModel newPersonData) {
         Optional<PersonRest> result = persons.stream()
-                .filter(p -> returnValue.getDni().equals(p.getDni()))
+                .filter(p -> dni.equals(p.getDni()))
                 .findFirst();
 
         if (result.isPresent()) {
-            PersonRest person = result.get();
-            return new ResponseEntity<>(person, HttpStatus.OK);
+            PersonRest storedPersonData = result.get();
+            storedPersonData.setName(newPersonData.getName());
+            storedPersonData.setSurname(newPersonData.getSurname());
+            storedPersonData.setSecondSurname(newPersonData.getSecondSurname());
+            storedPersonData.setDob(newPersonData.getDob());
+            storedPersonData.setSex(newPersonData.getSex());
+
+            return new ResponseEntity<>(storedPersonData, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }
